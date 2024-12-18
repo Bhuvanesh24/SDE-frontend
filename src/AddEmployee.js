@@ -26,36 +26,43 @@ const AddEmployee = () => {
     const { name, value } = e.target;
 
     if (name === "phone_number") {
-      
+      // Handle phone number validation
       if (/^\d{0,10}$/.test(value)) {
         setFormData((prevData) => ({
           ...prevData,
           [name]: value,
         }));
 
-        
+        // If phone number is valid (10 digits), remove any error
         if (value.length === 10) {
           setErrors((prevErrors) => ({
             ...prevErrors,
             phone_number: '',
           }));
+        } else if (value.length < 10) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            phone_number: 'Phone number must contain exactly 10 digits.',
+          }));
         }
       } else {
-      
+        // If invalid input (e.g., non-numeric characters)
         setErrors((prevErrors) => ({
           ...prevErrors,
           phone_number: "Only numbers are allowed, and the length must be 10 digits.",
         }));
       }
     } else {
-     
+      // For all other fields, simply update the form data
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
+
+      // Reset any specific error for the field
       setErrors((prevErrors) => ({
         ...prevErrors,
-        [name]: '', 
+        [name]: '', // clear error for changed field
       }));
     }
   };
@@ -89,21 +96,17 @@ const AddEmployee = () => {
     try {
       const response = await axios.post(`${backend_url}api/employee/add-employee/`, formData);
 
-      
       if (response.status === 201) {
         setSuccessMessage("Employee added successfully!");
 
-        
         setTimeout(() => {
-          handleReset(); 
+          handleReset();
         }, 3000);
       }
     } catch (error) {
       if (error.response) {
-       
         setErrors(error.response.data || { message: "An error occurred" });
       } else {
-      
         setErrors({ message: "An unexpected error occurred. Please try again later." });
       }
     } finally {
