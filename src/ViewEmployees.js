@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const backend_url = "http://127.0.0.1:8000/";
+const backend_url = "https://sde-backend-production.up.railway.app/";
 
 const ViewEmployees = () => {
   const [employees, setEmployees] = useState([]);
